@@ -114,6 +114,32 @@ Blockly.Blocks['actual_sprite'] = {
   }
 };
 
+Blockly.Blocks['actual_block'] = {
+  init: function() {
+    this.appendValueInput("assert")
+        .setCheck(["assert_should", "assert_should_not"])
+        .appendField("Block")
+        .appendField(new Blockly.FieldTextInput(""), "NAME");
+    this.setOutput(true, "actual");
+    this.setColour(290);
+    this.setTooltip('');
+    this.setHelpUrl('http://www.example.com/');
+  }
+};
+
+Blockly.Blocks['actual_block_type'] = {
+  init: function() {
+    this.appendValueInput("assert")
+        .setCheck(["assert_should", "assert_should_not"])
+        .appendField("Block Type")
+        .appendField(new Blockly.FieldTextInput(""), "NAME");
+    this.setOutput(true, "actual");
+    this.setColour(290);
+    this.setTooltip('');
+    this.setHelpUrl('http://www.example.com/');
+  }
+};
+
 Blockly.Blocks['assert_should'] = {
   init: function() {
     this.appendValueInput("matcher")
