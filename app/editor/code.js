@@ -94,7 +94,7 @@ Code.runButtonClicked = function() {
     var aid = document.getElementById('aid').value;
     
     var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "http://sage-assess:8081/assessments/"+aid, true);
+    xhttp.open("POST", "http://sage-2ik12mb0.cloudapp.net:8081/assessments/"+aid, true);
     xhttp.setRequestHeader("Content-type", "application/xml");
     xhttp.send(xmlText);
 }
