@@ -41,7 +41,7 @@ Blockly.Blocks['expect'] = {
 Blockly.Blocks['trigger_pass'] = {
   init: function() {
     this.appendValueInput("action")
-        .setCheck(["action_say", "action_block_include", "action_block_exclude"])
+        .setCheck(["action_say", "action_add_points", "action_block_include", "action_block_exclude"])
         .appendField("If pass");
     this.setPreviousStatement(true, ["trigger_pass", "trigger_fail", "expect"]);
     this.setNextStatement(true, ["trigger_pass", "trigger_fail"]);
@@ -76,6 +76,31 @@ Blockly.Blocks['action_say'] = {
     this.setHelpUrl('http://www.example.com/');
   }
 };
+
+Blockly.Blocks['action_add_points'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Add points")
+        .appendField(new Blockly.FieldTextInput(""), "point_value");
+    this.setOutput(true, "action_add_points");
+    this.setColour(20);
+    this.setTooltip('');
+    this.setHelpUrl('http://www.example.com/');
+  }
+};
+
+
+/*Blockly.Blocks['action_add_points'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Add points")
+        .appendField(new Blockly.FieldTextInput(""), "point_value");
+    this.setOutput(true, "action_add_points");
+    this.setColor(20);
+    this.setTooltip('');
+    this.setHelpUrl('http://www.example.com');
+  }
+};*/
 
 Blockly.Blocks['action_block_include'] = {
   init: function() {
@@ -113,6 +138,8 @@ Blockly.Blocks['actual_sprite'] = {
     this.setHelpUrl('http://www.example.com/');
   }
 };
+
+
 
 Blockly.Blocks['actual_block'] = {
   init: function() {
