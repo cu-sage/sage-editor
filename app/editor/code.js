@@ -90,10 +90,22 @@ Code.workspace = null;
 Code.runButtonClicked = function() {
     var xmlDom = Blockly.Xml.workspaceToDom(Code.workspace);
     var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
+
+    var xmlDoc = $.parseXML( xmlText );
+    var $xml = $( xmlDoc );
+    
+    //calculate total points from each point_value block 
+    var points = 0;
+    $xml.find( 'block[type="action_add_points"]').each(function(index, value){
+      points += $(value).find('field[name="point_value"]').text();
+
+    });
+    console.log(points);
    
     var aid = document.getElementById('aid').value;
     var pid = document.getElementById('pid').value;
     
+    //TODO - make call to new SAGE server here
     var xhttp = new XMLHttpRequest();
     xhttp.open("POST", "http://localhost/8081/assessments/"+aid, true);
     xhttp.setRequestHeader("Content-type", "application/xml");
@@ -151,7 +163,17 @@ Code.loadBlocks = function(defaultXml) {
     //var xml = "<xml xmlns=\"http:\/\/www.w3.org\/1999\/xhtml\">\r\n  <block type=\"expect\" id=\"@Q#aD,MvIn4p+,L%(FT=\" x=\"-487\" y=\"-287\">\r\n    <value name=\"NAME\">\r\n      <block type=\"actual_sprite\" id=\"BnSMSjGn;q^NEol7f^^;\">\r\n        <field name=\"NAME\">\"ball\"<\/field>\r\n        <value name=\"actual\">\r\n          <block type=\"assert_should\" id=\"@F)8]9*h]zBVY!?Pb=X?\">\r\n            <value name=\"matcher\">\r\n              <block type=\"matcher_be_present\" id=\"2.=PbKxR}Q{W[iyp,d3k\"><\/block>\r\n            <\/value>\r\n          <\/block>\r\n        <\/value>\r\n      <\/block>\r\n    <\/value>\r\n    <next>\r\n      <block type=\"trigger_pass\" id=\"7`M+~kbqT@xdYIX6`U=k\">\r\n        <value name=\"action\">\r\n          <block type=\"action_say\" id=\"sJ^gR;.ihSL]9~*~Funl\">\r\n            <field name=\"say_text\">good job<\/field>\r\n          <\/block>\r\n        <\/value>\r\n        <next>\r\n          <block type=\"trigger_pass\" id=\"C2P5`4lc7KUWXLs,RViv\">\r\n            <value name=\"action\">\r\n              <block type=\"action_add_points\" id=\"-7P0ui4LX+pnO+?vjDOR\">\r\n                <field name=\"point_value\">10<\/field>\r\n              <\/block>\r\n            <\/value>\r\n          <\/block>\r\n        <\/next>\r\n      <\/block>\r\n    <\/next>\r\n  <\/block>\r\n<\/xml>";
     var xmlText = '<xml>';
     xmlText += '  <block type="expect" id="v%kq5WgSPvUoxlI1uljg" x="38" y="38"></block>';
+    xmlText += '    <next>';
+    xmlText += '      <block type="trigger_pass" id="U{eXtxW=3iVvvbKWY])(">';
+    xmlText += '        <value name="action">';
+    xmlText += '          <block type="action_add_points" id="j8nU:*!SmUtF/o+M=/J]">';
+    xmlText += '            <field name="point_value">10</field>';
+    xmlText += '          </block>';
+    xmlText += '        </value>';
+    xmlText += '      </block>';
+    xmlText += '    </next>';
     xmlText += '</xml>';
+
     var xmlDom = null;
 
     try {
@@ -258,6 +280,8 @@ Code.tabClick = function(clickedName) {
   if (document.getElementById('tab_xml').className == 'tabon') {
     var xmlTextarea = document.getElementById('content_xml');
     var xmlText = xmlTextarea.value;
+    
+
     var xmlDom = null;
     try {
       xmlDom = Blockly.Xml.textToDom(xmlText);
