@@ -81,7 +81,7 @@ Blockly.Blocks['action_add_points'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("Add points")
-        .appendField(new Blockly.FieldTextInput(""), "point_value");
+        .appendField(new Blockly.FieldNumber('0', 0, 500, 1), "point_value");
     this.setOutput(true, "action_add_points");
     this.setColour(20);
     this.setTooltip('');
