@@ -105,12 +105,26 @@ Code.runButtonClicked = function() {
     var aid = document.getElementById('aid').value;
     var pid = document.getElementById('pid').value;
     
-    //TODO - make call to new SAGE server here
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "http://localhost/8081/assessments/"+aid, true);
-    xhttp.setRequestHeader("Content-type", "application/xml");
-    xhttp.send(xmlText);
-}
+    //TODO - when hooked up to front end we would get our assignment ID from there
+    //right now it's just hardcoded from the mock data
+    var url = "http://localhost:8081/assignments/583c9865aa877721348f427e/update_xml";
+    
+    //var teacher_id = "teacher_id=582f7e45d35339723018e6d1"
+    //We make an ajax call to new SAGE server here
+    var http = new XMLHttpRequest();
+    http.open("POST", url, true);
+    http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    //http.setRequestHeader("Connection", "close");
+
+    http.onreadystatechange = function() {//Call a function when the state changes.
+      if(http.readyState == 4 && http.status == 200) {
+        alert(http.responseText);
+      }
+    };
+
+    http.send( JSON.stringify({ xml : xmlText, points_total : points}));
+
+};
 
 /**
  * Extracts a parameter from the URL.
@@ -159,7 +173,9 @@ Code.loadBlocks = function(defaultXml) {
   }
   if ( window.location.hash.length > 1) {
     // An href with #key trigers an AJAX call to retrieve saved blocks.
-    //BlocklyStorage.retrieveXml("test1.xml");
+    //we are NOT using the provided Blockly storage. We use the SAGE server instead
+
+
     //var xml = "<xml xmlns=\"http:\/\/www.w3.org\/1999\/xhtml\">\r\n  <block type=\"expect\" id=\"@Q#aD,MvIn4p+,L%(FT=\" x=\"-487\" y=\"-287\">\r\n    <value name=\"NAME\">\r\n      <block type=\"actual_sprite\" id=\"BnSMSjGn;q^NEol7f^^;\">\r\n        <field name=\"NAME\">\"ball\"<\/field>\r\n        <value name=\"actual\">\r\n          <block type=\"assert_should\" id=\"@F)8]9*h]zBVY!?Pb=X?\">\r\n            <value name=\"matcher\">\r\n              <block type=\"matcher_be_present\" id=\"2.=PbKxR}Q{W[iyp,d3k\"><\/block>\r\n            <\/value>\r\n          <\/block>\r\n        <\/value>\r\n      <\/block>\r\n    <\/value>\r\n    <next>\r\n      <block type=\"trigger_pass\" id=\"7`M+~kbqT@xdYIX6`U=k\">\r\n        <value name=\"action\">\r\n          <block type=\"action_say\" id=\"sJ^gR;.ihSL]9~*~Funl\">\r\n            <field name=\"say_text\">good job<\/field>\r\n          <\/block>\r\n        <\/value>\r\n        <next>\r\n          <block type=\"trigger_pass\" id=\"C2P5`4lc7KUWXLs,RViv\">\r\n            <value name=\"action\">\r\n              <block type=\"action_add_points\" id=\"-7P0ui4LX+pnO+?vjDOR\">\r\n                <field name=\"point_value\">10<\/field>\r\n              <\/block>\r\n            <\/value>\r\n          <\/block>\r\n        <\/next>\r\n      <\/block>\r\n    <\/next>\r\n  <\/block>\r\n<\/xml>";
     var xmlText = '<xml>';
     xmlText += '  <block type="expect" id="v%kq5WgSPvUoxlI1uljg" x="38" y="38"></block>';
@@ -314,7 +330,8 @@ Code.tabClick = function(clickedName) {
   if (clickedName == 'blocks') {
     Code.workspace.setVisible(true);
   }
-  Blockly.fireUiEvent(window, 'resize');
+  //fix error, Blockly.fireUIEvent deprecated
+  window.dispatchEvent(new Event('resize'))
 };
 
 /**
