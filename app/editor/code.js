@@ -93,36 +93,45 @@ Code.runButtonClicked = function() {
 
     var xmlDoc = $.parseXML( xmlText );
     var $xml = $( xmlDoc );
-    
-    //calculate total points from each point_value block 
+
+    //calculate total points from each point_value block
     var points = 0;
     $xml.find( 'block[type="action_add_points"]').each(function(index, value){
       points += $(value).find('field[name="point_value"]').text();
 
     });
     console.log(points);
-   
+
+    var updateUrl = 'http://localhost:8081/assignments/583c9865aa877721348f427e/update_xml';
+
+    $.post(updateUrl, {
+      xml: xmlText,
+      point_total: points
+    }, function(data) {
+      console.log(data);
+    });
+
     //var aid = document.getElementById('aid').value;
     //var pid = document.getElementById('pid').value;
-    
+
     //TODO - when hooked up to front end we would get our assignment ID from there
     //right now it's just hardcoded from the mock data
-    var url = "http://localhost:8081/assignments/583c9865aa877721348f427e/update_xml";
-    
-    //var teacher_id = "teacher_id=582f7e45d35339723018e6d1"
-    //We make an ajax call to new SAGE server here
-    var http = new XMLHttpRequest();
-    http.open("POST", url, true);
-    http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    //http.setRequestHeader("Connection", "close");
+    // var url = "";
 
-    http.onreadystatechange = function() {//Call a function when the state changes.
-      if(http.readyState == 4 && http.status == 200) {
-        alert(http.responseText);
-      }
-    };
+    // //var teacher_id = "teacher_id=582f7e45d35339723018e6d1"
+    // //We make an ajax call to new SAGE server here
+    // var http = new XMLHttpRequest();
+    // http.open("POST", url, true);
+    // http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    // //http.setRequestHeader("Connection", "close");
 
-    http.send( JSON.stringify({ xml : xmlText, points_total : points}));
+    // http.onreadystatechange = function() {//Call a function when the state changes.
+    //   if(http.readyState == 4 && http.status == 200) {
+    //     alert(http.responseText);
+    //   }
+    // };
+
+    // http.send( JSON.stringify({ xml : xmlText, points_total : points}));
 
 };
 
@@ -175,7 +184,7 @@ Code.loadBlocks = function(defaultXml) {
     // An href with #key trigers an AJAX call to retrieve saved blocks.
     //we are NOT using the provided Blockly storage. We use the SAGE server instead
     //the number after the hash is the assignment id
-    var assignment_id = window.location.hash.substring(1)   
+    var assignment_id = window.location.hash.substring(1)
     var http = new XMLHttpRequest();
     var url = "http://localhost:8081/assignments/";
 
@@ -223,7 +232,7 @@ Code.loadBlocks = function(defaultXml) {
       Code.workspace.clear();
       Blockly.Xml.domToWorkspace(xmlDom, Code.workspace);
     }
-    
+
 
   } else if (loadOnce) {
     // Language switching stores the blocks during the reload.
@@ -317,7 +326,7 @@ Code.tabClick = function(clickedName) {
   if (document.getElementById('tab_xml').className == 'tabon') {
     var xmlTextarea = document.getElementById('content_xml');
     var xmlText = xmlTextarea.value;
-    
+
 
     var xmlDom = null;
     try {
