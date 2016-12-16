@@ -102,8 +102,8 @@ Code.runButtonClicked = function() {
     });
     console.log(points);
    
-    var aid = document.getElementById('aid').value;
-    var pid = document.getElementById('pid').value;
+    //var aid = document.getElementById('aid').value;
+    //var pid = document.getElementById('pid').value;
     
     //TODO - when hooked up to front end we would get our assignment ID from there
     //right now it's just hardcoded from the mock data
@@ -174,7 +174,28 @@ Code.loadBlocks = function(defaultXml) {
   if ( window.location.hash.length > 1) {
     // An href with #key trigers an AJAX call to retrieve saved blocks.
     //we are NOT using the provided Blockly storage. We use the SAGE server instead
+    //the number after the hash is the assignment id
+    var assignment_id = window.location.hash.substring(1)   
+    var http = new XMLHttpRequest();
+    var url = "http://localhost:8081/assignments/";
 
+    var xmlText2;
+
+    http.onreadystatechange = function() {
+      if (http.readyState == 4 && http.status == 200) {
+          var response = JSON.parse(http.responseText);
+          xmlText2 = response.xml;
+          alert(xmlText2);
+      }
+    };
+
+
+
+    http.open("GET", url.concat(assignment_id), true);
+    http.send();
+
+    console.log("hello");
+    console.log(xmlText2);
 
     //var xml = "<xml xmlns=\"http:\/\/www.w3.org\/1999\/xhtml\">\r\n  <block type=\"expect\" id=\"@Q#aD,MvIn4p+,L%(FT=\" x=\"-487\" y=\"-287\">\r\n    <value name=\"NAME\">\r\n      <block type=\"actual_sprite\" id=\"BnSMSjGn;q^NEol7f^^;\">\r\n        <field name=\"NAME\">\"ball\"<\/field>\r\n        <value name=\"actual\">\r\n          <block type=\"assert_should\" id=\"@F)8]9*h]zBVY!?Pb=X?\">\r\n            <value name=\"matcher\">\r\n              <block type=\"matcher_be_present\" id=\"2.=PbKxR}Q{W[iyp,d3k\"><\/block>\r\n            <\/value>\r\n          <\/block>\r\n        <\/value>\r\n      <\/block>\r\n    <\/value>\r\n    <next>\r\n      <block type=\"trigger_pass\" id=\"7`M+~kbqT@xdYIX6`U=k\">\r\n        <value name=\"action\">\r\n          <block type=\"action_say\" id=\"sJ^gR;.ihSL]9~*~Funl\">\r\n            <field name=\"say_text\">good job<\/field>\r\n          <\/block>\r\n        <\/value>\r\n        <next>\r\n          <block type=\"trigger_pass\" id=\"C2P5`4lc7KUWXLs,RViv\">\r\n            <value name=\"action\">\r\n              <block type=\"action_add_points\" id=\"-7P0ui4LX+pnO+?vjDOR\">\r\n                <field name=\"point_value\">10<\/field>\r\n              <\/block>\r\n            <\/value>\r\n          <\/block>\r\n        <\/next>\r\n      <\/block>\r\n    <\/next>\r\n  <\/block>\r\n<\/xml>";
     var xmlText = '<xml>';
@@ -193,14 +214,14 @@ Code.loadBlocks = function(defaultXml) {
     var xmlDom = null;
 
     try {
-      xmlDom = Blockly.Xml.textToDom(xmlText);
+      xmlDom = Blockly.Xml.textToDom(xmlText2);
     } catch (e) {
       // Do nothing. Return the use back to the Blocks tab
     }
 
     if (xmlDom){
       Code.workspace.clear();
-      Blockly.Xml.domToWorkspace(Code.workspace, xmlDom);
+      Blockly.Xml.domToWorkspace(xmlDom, Code.workspace);
     }
     
 
@@ -306,7 +327,7 @@ Code.tabClick = function(clickedName) {
     }
     if (xmlDom) {
       Code.workspace.clear();
-      Blockly.Xml.domToWorkspace(Code.workspace, xmlDom);
+      Blockly.Xml.domToWorkspace(xmlDom, Code.workspace);
     }
   }
 
