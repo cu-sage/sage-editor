@@ -89,8 +89,8 @@ Code.workspace = null;
 
 Code.runButtonClicked = function() {
     var xmlDom = Blockly.Xml.workspaceToDom(Code.workspace);
-    var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
-
+    //var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
+    var xmlText = Blockly.Xml.domToText(xmlDom);
     var xmlDoc = $.parseXML( xmlText );
     var $xml = $( xmlDoc );
 
@@ -101,16 +101,30 @@ Code.runButtonClicked = function() {
 
     });
     console.log(points);
-
-    var updateUrl = 'http://localhost:8081/assignments/583c9865aa877721348f427e/update_xml';
-
+    //console.log($xml);
+    //var updateUrl = 'http://localhost:8081/assignments/583c9865aa877721348f427e/update_xml';
+    var updateUrl = "http://localhost:8081/objectives/58d845736e4ddb3ce20ed1b3";
     $.post(updateUrl, {
-      xml: xmlText,
+      xmlfile: xmlText,
       point_total: points
     }, function(data) {
       console.log(data);
     });
+/*
+    var fd = new FormData();
+    fd.append( 'xmlfile', xmlText );
 
+    $.ajax({
+        url: updateUrl,
+        data: fd,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function(data){
+            alert(data);
+        }
+    });
+*/
     //var aid = document.getElementById('aid').value;
     //var pid = document.getElementById('pid').value;
 
